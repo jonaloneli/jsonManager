@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JSON Manager</title>
+  <link rel="icon" href="../static/img/icono-Sistem.ico">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e6e6e6;
+    }
+
+    /* .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        } */
+    /* Estilos para el contenedor principal */
+    .container {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      padding: 20px;
+    }
+
+    /* Estilos para el contenedor principal */
+    .main-container {
+      flex: 1;
+      margin-right: 15%;
+      /* Espacio entre el contenedor principal y el de explicaciones */
+    }
+
+    /* Estilos para el contenedor de explicaciones */
+    .explanation-container {
+      width: 30%;
+      background-color: #e7e6e6;
+      margin-right: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Estilos para los pasos */
+    .step {
+      margin-bottom: 20px;
+    }
+
+    .step h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .step p {
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    /* Estilos para el textarea */
+    input,
+    textarea {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      resize: vertical;
+      /* Permite redimensionar verticalmente */
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #4caf50;
+    }
+
+    select {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      appearance: none;
+      /* Elimina los estilos nativos del sistema operativo */
+      -webkit-appearance: none;
+      /* Para navegadores basados en WebKit (Chrome, Safari, etc.) */
+      -moz-appearance: none;
+      /* Para Firefox */
+      background-color: #f2f2f2;
+      color: #555;
+      width: 22%;
+      box-sizing: border-box;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #4caf50;
+    }
+
+    button {
+      background-color: #44484e;
+      border: none;
+      color: rgb(237, 236, 236);
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      transition-duration: 0.4s;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      /* Reduce la opacidad cuando está desactivado */
+      cursor: not-allowed;
+      /* Cambia el cursor cuando está desactivado */
+    }
+
+    button:hover {
+      background-color: #a9b1a9;
+    }
+
+    button.selected {
+      background-color: green;
+    }
+
+    button.selected:hover {
+      background-color: darkgreen;
+    }
+
+    button.selected {
+      color: white;
+    }
+
+    .result,
+    .errors {
+      white-space: pre-wrap;
+    }
+
+    /* Estilos para la barra de navegación */
+    .navbar {
+      background-color: #343a40;
+      /* Color oscuro */
+      padding: 8px 20px;
+      /* Ajuste del relleno */
+      display: flex;
+      justify-content: space-between;
+      /* Alinear los elementos a los extremos */
+    }
+
+    /* Estilos para la barra de navegación */
+    .navbar {
+      display: flex;
+      align-items: center;
+      background-color: #333;
+      padding: 10px;
+    }
+
+    /* Estilos para la barra de navegación */
+    .navbar {
+      display: flex;
+      align-items: center;
+      background-color: #333;
+      padding: 10px;
+    }
+
+    /* Estilos para el logo */
+    .navbar-logo {
+      height: 40px;
+      /* Ajusta el tamaño del logo según sea necesario */
+      margin-right: 20px;
+      /* Espacio entre el logo y los enlaces */
+    }
+
+    /* Estilos para los enlaces */
+    .navbar-links {
+      display: flex;
+      flex-grow: 1;
+      /* Ocupa el espacio restante */
+      justify-content: flex-end;
+      /* Alinea los enlaces a la derecha */
+    }
+
+    /* Estilos para los elementos de la barra de navegación */
+    .navbar a {
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 20px;
+      margin: 0 5px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    /* Cambio de color de fondo al pasar el ratón sobre los elementos de la barra de navegación */
+    .navbar a:hover {
+      background-color: #6c757d;
+    }
+
+    /* Hacer que los enlaces sean responsivos */
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .navbar-logo {
+        margin-bottom: 10px;
+      }
+
+      .navbar-links {
+        justify-content: flex-start;
+      }
+
+      .navbar a {
+        padding: 10px;
+        margin: 5px 0;
+      }
+    }
+
+    /* Estilos para diferencias */
+    .difference {
+      color: red;
+      font-weight: bold;
+    }
+
+    .selected {
+      background-color: green;
+    }
+
+    /* Estilo para mostrar el contenedor de errores */
+    .error-visible {
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #d9534f;
+      /* Color del borde rojo */
+      border-radius: 4px;
+      background-color: #f2dede;
+      /* Color de fondo rojo claro */
+      color: #a94442;
+      /* Color del texto rojo oscuro */
+      display: block;
+      /* Mostrar el contenedor de errores cuando se agrega esta clase */
+    }
+
+    .error-message {
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #d9534f;
+      /* Color del borde rojo */
+      border-radius: 4px;
+      background-color: #f2dede;
+      /* Color de fondo rojo claro */
+      color: #a94442;
+      /* Color del texto rojo oscuro */
+    }
+
+    /* Estilo para el alert */
+    .alert {
+      padding: 15px;
+      margin-bottom: 20px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+    }
+
+    .alert-danger {
+      color: #721c24;
+      /* Color del texto */
+      background-color: #f8d7da;
+      /* Color de fondo */
+      border-color: #f5c6cb;
+      /* Color del borde */
+    }
+
+    .alert-success {
+      color: #155724;
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+    }
+
+    .alert-warning {
+      color: #856404;
+      background-color: #fff3cd;
+      border-color: #ffeeba;
+    }
+
+    .alert-info {
+      color: #0c5460;
+      background-color: #d1ecf1;
+      border-color: #bee5eb;
+    }
+
+    /*Estilo opcional para los pasos 1-2-3-4*/
+    .form-group {
+      margin-bottom: 20px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group label {
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .result {
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 10px;
+      background-color: #fff;
+    }
+
+    #btn_vm1 img,
+    #btn_vm2 img,
+    #btn_vm3 img,
+    #btn_vm4 img,
+    .btn_vm5 img {
+      width: 22px;
+      /* Ajusta el ancho de la imagen */
+      height: auto;
+      /* La altura se ajustará automáticamente para mantener la relación de aspecto */
+      margin-right: 5px;
+      /* Añade espacio a la derecha del ícono */
+    }
+
+    #modifyButton img {
+      width: 19px;
+      /* Ajusta el ancho de la imagen */
+      height: auto;
+      /* La altura se ajustará automáticamente para mantener la relación de aspecto */
+      margin-right: 2px;
+      /* Añade espacio a la derecha del ícono */
+    }
+
+    #backupButton img {
+      width: 22px;
+      /* Ajusta el ancho de la imagen */
+      height: auto;
+      /* La altura se ajustará automáticamente para mantener la relación de aspecto */
+      margin-right: 5px;
+      /* Añade espacio a la derecha del ícono */
+    }
+
+
+    /*CARGANDO....*/
+    .loading {
+      font-size: 18px;
+      color: rgb(1, 1, 19);
+      text-align: center;
+      position: fixed;
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+    }
+
+    .loading::after {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: blue;
+      border-radius: 50%;
+      margin-left: 10px;
+      animation: loading 1s linear infinite;
+    }
+
+    @keyframes loading {
+      0% {
+        transform: translateX(0);
+      }
+
+      50% {
+        transform: translateX(50px);
+        background-color: white;
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    }
+
+
+    /* MODO OSCURO/CLARO */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e6e6e6;
+      color: #000;
+      transition: background-color 0.5s, color 0.5s;
+    }
+
+    /* Modo oscuro */
+    body.dark-mode {
+      background-color: #1e1e1e;
+      color: #d1d0d0;
+    }
+
+    .container {
+      max-width: 1700px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.5s;
+    }
+
+    /* Fondo oscuro para form-group en modo oscuro */
+    body.dark-mode .form-group {
+      background-color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    select,
+    button {
+      padding: 10px;
+    }
+
+    button {
+      background-color: #44484e;
+      border: none;
+      color: rgb(237, 236, 236);
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      transition-duration: 0.4s;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    button:hover {
+      background-color: #a9b1a9;
+    }
+
+    .result {
+      white-space: pre-wrap;
+      background-color: #fff;
+      color: #000;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      transition: background-color 0.5s, color 0.5s;
+    }
+
+    body.dark-mode .result {
+      background-color: #444;
+      color: #fff;
+    }
+
+    /* Estilos para la barra de navegación */
+    .navbar {
+      background-color: #343a40;
+      padding: 8px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar-logo {
+      height: 40px;
+      margin-right: 20px;
+    }
+
+    .navbar-links {
+      display: flex;
+      flex-grow: 1;
+      justify-content: flex-end;
+    }
+
+    .navbar a {
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 20px;
+      margin: 0 5px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .navbar a:hover {
+      background-color: #6c757d;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .navbar-logo {
+        margin-bottom: 10px;
+      }
+
+      .navbar-links {
+        justify-content: flex-start;
+      }
+
+      .navbar a {
+        padding: 10px;
+        margin: 5px 0;
+      }
+    }
+
+    /* Estilo para la fila */
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    /* Estilo para la columna */
+    .column {
+      flex: 1 1 20%;
+      max-width: 5%;
+      padding: 0 15px;
+    }
+
+    .column p {
+      margin: 5px 0;
+    }
+
+    .camera-box {
+      border: 1px solid #ccc;
+      display: inline-block;
+      margin: 5px;
+      padding: 5px;
+      text-align: center;
+      width: auto;
+      max-width: 80px;
+      max-height: 30px;
+      cursor: pointer;
+    }
+
+    .camera-box span {
+      margin-top: -28px;
+      display: block;
+      font-size: 15px;
+    }
+
+    /* Botón de cambio de tema */
+    .theme-toggle {
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    /* Cargando... */
+    .loading {
+      font-size: 18px;
+      color: rgb(3, 3, 19);
+      text-align: center;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      transition: color 0.5s;
+    }
+
+    .loading::after {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: blue;
+      border-radius: 50%;
+      margin-left: 10px;
+      animation: loading 1s linear infinite;
+      transition: background-color 0.5s;
+    }
+
+    /* Estilos para el modo oscuro */
+    body.dark-mode .loading {
+      color: #fff;
+      /* Color blanco para el texto */
+    }
+
+    body.dark-mode .loading::after {
+      background-color: yellow;
+      /* Color amarillo para los puntos */
+    }
+
+    @keyframes loading {
+      0% {
+        transform: translateX(0);
+      }
+
+      50% {
+        transform: translateX(50px);
+        background-color: white;
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    }
+
+    /* Estilos para explanation-container */
+    .explanation-container {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      transition: background-color 0.5s, color 0.5s;
+    }
+
+    .explanation-container h2,
+    .explanation-container h3,
+    .explanation-container p {
+      color: #333;
+      transition: color 0.5s;
+    }
+
+    /* Estilos para el modo oscuro en explanation-container */
+    body.dark-mode .explanation-container {
+      background-color: #2c2c2c;
+      /* Fondo oscuro */
+      color: #f0f0f0;
+      /* Texto blanco */
+    }
+
+    body.dark-mode .explanation-container h2,
+    body.dark-mode .explanation-container h3,
+    body.dark-mode .explanation-container p {
+      color: #f0f0f0;
+    }
+
+
+    .flashes {
+      list-style-type: none;
+      /* Eliminar viñetas */
+      margin: 0;
+      /* Sin márgenes */
+      padding: 0;
+      /* Sin padding */
+      display: flex;
+      /* Hacer que los mensajes estén en línea */
+      align-items: center;
+      /* Alinear verticalmente */
+    }
+
+    .flashes li {
+      font-size: 15px;
+      /* Tamaño de fuente más pequeño */
+      padding: 5px 10px;
+      /* Espaciado alrededor del texto */
+      margin-left: 10px;
+      /* Espacio entre los mensajes y otros elementos */
+      border-radius: 4px;
+      /* Bordes redondeados */
+    }
+
+    .flashes .alert-success {
+      background-color: #d4edda;
+      /* Fondo verde claro para éxito */
+      color: #155724;
+      /* Color de texto verde oscuro */
+    }
+
+    .flashes .alert-danger {
+      background-color: #f8d7da;
+      /* Fondo rojo claro para error */
+      color: #721c24;
+      /* Color de texto rojo oscuro */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="navbar">
+    <div></div>
+    <img src="/static/img/logo.png" alt="Logo" class="navbar-logo">
+    <div class="navbar-links">
+      <a href="/">JSON Manager</a>
+      <a href="/cameras">Lista de Cámaras</a>
+      <span class="theme-toggle" id="theme-toggle">&#x1F31E;</span> <!-- Icono de Sol -->
+
+      <!-- Mostrar el botón de cerrar sesión si el usuario está autenticado -->
+      {% if 'user' in session %}
+      <a href="{{ url_for('logout') }}" class="logout-btn">Cerrar sesión</a>
+      {% endif %}
+
+      <!-- Mostrar mensajes flash -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <ul class="flashes">
+        {% for category, message in messages %}
+        <li class="alert alert-{{ category }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% endwith %}
+    </div>
+  </div>
+
+
+  <div class="container">
+    <div class="explanation-container">
+      <h2>Pasos a seguir:</h2>
+      <div class="step">
+        <h3>Paso 1:</h3>
+        <p style="font-size: 18px;">Seleccionamos uno de los regeneración, se nos abrira un pop-up <br> confirmando el
+          servidor seleccionado y aceptamos.</p>
+      </div>
+      <div class="step">
+        <h3>Paso 2:</h3>
+        <p style="font-size: 18px;">Introducimos un identificador valido, como por ejemplo (camera.0733) y le damos
+          en <strong>"Buscar"</strong>. En <strong>"Resultado"</strong> nos aparecera
+          los bloques de codigo encontrados y el origen.
+        </p>
+      </div>
+      <div class="step">
+        <h3>Paso 3:</h3>
+        <p style="font-size: 18px;">Poner las modificaciones que haremos en <strong>Nota de versiones</strong>,<br>
+          seguido del bloque de codigo modificado y le damos a <strong>"Backup"</strong> <br>
+          aparecera un pop-up confirmado que se ha guardado el archivo <br>json con el blog de notas temporalmente.</p>
+      </div>
+      <div class="step">
+        <h3>Paso 4:</h3>
+        <p style="font-size: 18px;">Moficamos el bloque de código y posteriormente le damos al boton <br>
+          <strong>"Modificar JSON y Guardar"</strong><em>(El boton se habilitara una vez hecho el backup del paso
+            3).</em>
+          Esperamos que aparezca el pop-up confirmando que se ha guardado correctamente.
+          <br>
+          <br>
+          <em>(Una vez modificado y guardado es cuando también se guarda el BACKUP realizado en el paso 3).</em>
+        </p>
+      </div>
+      <div class="step">
+        <p style="color: red; font-size: 18px;">
+          <strong>NOTA:</strong> <em>Si en <strong>"Resultado"</strong> retorna el json de color <strong>ROJO</strong>
+            hacer la modificación
+            manualmente en el servidor correspondiente.</em>
+        </p>
+      </div>
+      <br>
+      <div class="step">
+        <h3></h3>
+        <p style="font-size: 18px;">
+          <strong></strong> <em>La sección<strong>"Comparar MRL"</strong> sirve para comparar vizualmente el bloque de código del identificador dado. <strong>En este caso de la cámara que hemos puesto.</strong</em>
+        </p>
+      </div>
+      <!-- Agrega más pasos según sea necesario -->
+    </div>
+    <div class="main-container">
+      <h1>JSON Manager REG1 - REG2 - REG3 - REG4</h1>
+
+      <!-- Agrega botones para seleccionar la MV -->
+      <div class="form-group">
+        <h3>Paso 1:</h3>
+        <label>Seleccionar Regeneración:</label>
+        <button id="btn_vm1" onclick="selectVM('IP SERVIDOR 1')"><img src="../static/img/regeneracion.png" alt="">
+          REG 1 .61
+        </button>
+        <button id="btn_vm2" onclick="selectVM('IP SERVIDOR 2')"><img src="../static/img/regeneracion.png" alt="">
+          REG 2 .62
+        </button>
+        <button id="btn_vm3" onclick="selectVM('IP SERVIDOR 3')"><img src="../static/img/regeneracion.png" alt="">
+          REG 3 .63
+        </button>
+        <button id="btn_vm4" onclick="selectVM('IP SERVIDOR 4')"><img src="../static/img/regeneracion.png" alt="">
+          REG 4 .64
+        </button>
+        <!-- Botón para seleccionar todas las VMs -->
+        <button id="btn_select_all" class="btn_vm5" onclick="selectAllVMs()">
+          <img src="../static/img/regeneracion.png" alt="">Comparar MRL de todos los REG.
+        </button>
+      </div>
+
+      <div class="form-group">
+        <h3>Paso 2:</h3>
+        <label for="identifier">Identificador (<em>ejemplo camera.0733</em>):</label>
+        <input type="text" id="identifier" oninput="clearFields()" />
+        <br />
+        <br />
+        <button onclick="search()">Buscar</button>
+      </div>
+      <div id="loading" class="loading" style="display: none;">Cargando...</div>
+      <div class="form-group">
+        <label>Resultado:</label>
+        <div id="result" class="result"></div>
+        <br />
+        <label for="origin">Información de origen:</label>
+        <select id="origin">
+          <!-- <option value=""></option> -->
+        </select>
+      </div>
+
+      <div class="form-group" id="step3">
+        <h3>Paso 3:</h3>
+        <label>Backup-Nota de versiones (<em>modificaciones que se van ha realizar</em>):</label>
+        <textarea id="note" rows="5"></textarea>
+        <button id="backupButton" onclick="backup()"><img src="../static/img/backup.png" alt="">Backup</button>
+      </div>
+
+      <div class="form-group" id="step4">
+        <h3>Paso 4:</h3>
+        <label>Modificaciones:</label>
+        <textarea id="new_data" rows="10"></textarea>
+        <button id="modifyButton" onclick="modify()" disabled><img src="../static/img/modificar.png" alt="">
+          Modificar JSON y Guardar
+        </button>
+      </div>
+      <div id="loading" class="loading" style="display: none;">Cargando...</div>
+      <div class="form-group">
+        <label>Errores:</label>
+        <div id="errors" class="errors"></div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script>
+    // Espera a que el documento esté completamente cargado
+    document.addEventListener("DOMContentLoaded", function () {
+      // Selecciona todos los mensajes flash
+      const flashes = document.querySelectorAll('.flashes li');
+
+      // Itera sobre cada mensaje
+      flashes.forEach(function (flash) {
+        // Establece un temporizador para eliminar el mensaje después de 2 segundos
+        setTimeout(function () {
+          flash.style.opacity = '0'; // Desvanece el mensaje
+          setTimeout(function () {
+            flash.remove(); // Elimina el mensaje del DOM después de 0.5 segundos
+          }, 500); // 0.5 segundos de duración del efecto de desvanecimiento
+        }, 2000); // 2 segundos de espera antes de empezar a desvanecer
+      });
+    });
+    function enforcePrefix() {
+      const input = document.getElementById('identifier');
+      const prefix = 'camera.';
+
+      if (!input.value.startsWith(prefix)) {
+        input.value = prefix;
+      }
+    }
+    document.addEventListener('DOMContentLoaded', (event) => {
+      const input = document.getElementById('identifier');
+      input.value = 'camera.';
+      input.addEventListener('input', enforcePrefix);
+    });
+
+    function clearFields() {
+      document.getElementById("note").value = `
+##############################################
+## SISTEM - Registro de Cambios en Archivos ##
+##############################################
+
+APUNTAR LOS CAMBIOS REALIZADOS EN CUALQUIER FICHERO CON EL FORMATO: 
+
+| Fecha: DD/MM/YYYY 	| Autor:        | Modificaciones:
+      `.trim(); // Limpia el textarea del backup
+      document.getElementById("result").innerText = "";
+      document.getElementById("new_data").value = "";
+      document.getElementById("note").value = "";
+      document.getElementById("errors").innerText = "";
+      document.getElementById("modifyButton").disabled = true;
+      clearOriginSelect(); // Limpia el select de origen
+      backupData = null; // Limpia la variable de backup
+    }
+
+
+    async function selectAllVMs() {
+      const response = await fetch("/select_vm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ selected_vm: "all" }), // Usamos "all" para indicar la selección de todas las VMs
+      });
+    
+      const result = await response.json();
+      if (result.status === "success") {
+        alert("Todas las MVs han sido seleccionadas");
+    
+        // Ocultar los pasos 3 y 4 porque no aplican a todas las VMs
+        document.getElementById("step3").style.display = "none";
+        document.getElementById("step4").style.display = "none";
+    
+        // Mostrar mensaje de carga para todas las VMs
+        document.getElementById("result").innerHTML = "Cargando resultados para todas las VMs...";
+        document.getElementById("result").style.display = "block";
+        document.getElementById("origin").style.display = "block";
+    
+        // Agregar la clase 'selected' al botón de "Seleccionar Todas"
+        document.querySelectorAll("button").forEach((btn) => btn.classList.remove("selected"));
+        document.getElementById("btn_select_all").classList.add("selected");
+    
+        clearFields();
+        clearOriginSelect();
+      } else {
+        alert("Error al seleccionar todas las MVs");
+      }
+    }
+    
+
+
+    async function selectVM(ip) {
+      const response = await fetch("/select_vm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ selected_vm: ip }),
+      });
+    
+      const result = await response.json();
+      if (result.status === "success") {
+        alert(`Servidor seleccionado: ${ip}`);
+    
+        // Eliminar la clase 'selected' de todos los botones
+        document.querySelectorAll("button").forEach((btn) => btn.classList.remove("selected"));
+        // Agregar la clase 'selected' al botón seleccionado
+        document.getElementById(`btn_vm${ip[ip.length - 1]}`).classList.add("selected");
+    
+        // Restaurar la visibilidad de los pasos 3 y 4
+        document.getElementById("step3").style.display = "block";
+        document.getElementById("step4").style.display = "block";
+    
+        // Ocultar cualquier mensaje temporal de resultados si estaba visible
+        document.getElementById("result").style.display = "block";
+        document.getElementById("origin").style.display = "block";
+    
+        clearFields();
+        clearOriginSelect();
+      } else {
+        alert("Error al seleccionar la MV");
+      }
+    }
+    
+
+    function clearOriginSelect() {
+      const originDropdown = document.getElementById("origin");
+      originDropdown.innerHTML = ""; // Elimina todas las opciones del select
+    }
+    function clearOriginSelect() {
+      const originDropdown = document.getElementById("origin");
+      originDropdown.innerHTML = ""; // Elimina todas las opciones del select
+    }
+
+
+    async function search() {
+      const loadingElement = document.getElementById("loading");
+      loadingElement.style.display = "flex"; // Mostrar el elemento de carga
+
+      clearFields();
+
+      const identifier = document.getElementById("identifier").value;
+      const response = await fetch("/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `identifier=${encodeURIComponent(identifier)}`,
+      });
+      const result = await response.json();
+      const resultElement = document.getElementById("result");
+
+      if (result.status === "success") {
+        // Limpiar mensaje de error y su clase
+        resultElement.innerText = "";
+        resultElement.classList.remove("error-message");
+
+        // Asociar los orígenes con los datos
+        result.data.forEach((item, index) => {
+          item.origin = result.origins[index]; // Asociar origen con su correspondiente item
+        });
+
+        displayResults(result.data);
+
+        // Preparar el JSON para modificaciones, excluyendo el campo `origin`
+        const displayItem = {
+          Identifier: result.data[0].Identifier,
+          OSD: result.data[0].OSD,
+          mrl: result.data[0].mrl,
+        };
+        document.getElementById("new_data").value = JSON.stringify(
+          displayItem,
+          null,
+          4
+        );
+
+        const originDropdown = document.getElementById("origin");
+
+        // Limpiar las opciones existentes en el dopdown de origenes
+        originDropdown.innerHTML = "";
+
+        // Filtrar orígenes duplicados
+        const origins = result.origins.reduce((acc, origin) => {
+          const originText = `IP: ${origin.ip}, Folder: ${origin.folder}`;
+          if (!acc.some((o) => o.text === originText)) {
+            acc.push({ text: originText, value: origin });
+          }
+          return acc;
+        }, []);
+
+        origins.forEach((origin, index) => {
+          const originOption = document.createElement("option");
+          originOption.text = origin.text;
+          originOption.value = index; // Almacena el índice del origen
+          originDropdown.add(originOption);
+        });
+        document.getElementById("note").value = `
+##############################################
+## SISTEM - Registro de Cambios en Archivos ##
+##############################################
+
+APUNTAR LOS CAMBIOS REALIZADOS EN CUALQUIER FICHERO CON EL FORMATO: 
+
+| Fecha: DD/MM/YYYY 	| Autor:        | Modificaciones:
+      `.trim();
+      } else {
+        document.getElementById("result").innerText =
+          "No se ha encontrado ese identificador";
+        document.getElementById("result").classList.add("error-message");
+      }
+      handleErrors(result.errors);
+      loadingElement.style.display = "none"; // Ocultar el elemento de carga al finalizar
+    }
+
+
+    function displayResults(data) {
+      console.log("Datos recibidos", data); //Depuración
+      if (!data || data.length <= 0){
+        console.log("No hay datos para mostrar");
+        return;
+      }
+
+      const resultDiv = document.getElementById("result");
+      const originSelect = document.getElementById("origin");
+      resultDiv.innerHTML = "";
+      originSelect.innerHTML = "";
+
+      // Tomamos la primera mrl y OSD como base para comparar
+      const baseMRL = data[0]?.mrl || "";
+      const baseOSD = data[0]?.OSD || "";
+
+      data.forEach((item, index) => {
+        // Asegurarse de que cada item tiene una propiedad origin
+        const origin = item.origin
+          ? `IP: ${item.origin.ip}, Folder: ${item.origin.folder}`
+          : `Origen desconocido ${index + 1}`;
+
+        // Crear y agregar la opción al select
+        const option = document.createElement("option");
+        option.value = origin;
+        option.text = origin;
+        originSelect.appendChild(option);
+
+        // Crear el encabezado con la información de origen
+        const header = document.createElement("h4");
+        header.textContent = `Origen: ${origin}`;
+        resultDiv.appendChild(header);
+
+        // Crear el contenedor para el bloque de código
+        const itemDiv = document.createElement("div");
+        let displayItem = {
+          Identifier: item.Identifier,
+          OSD: item.OSD,
+          mrl: item.mrl,
+        };
+
+        let modifiedJSON = JSON.stringify(displayItem, null, 4);
+        modifiedJSON = modifiedJSON
+          .replace(/"mrl":\s*"(.*?)"/g, (match, p1) => {
+            const differences = getDifferences(baseMRL, p1);
+            return `"mrl": "${differences}"`;
+          })
+          .replace(/"OSD":\s*"(.*?)"/g, (match, p1) => {
+            const differences = getDifferences(baseOSD, p1);
+            return `"OSD": "${differences}"`;
+          });
+        itemDiv.innerHTML = modifiedJSON; // Use innerHTML to parse the HTML content
+        resultDiv.appendChild(itemDiv);
+        resultDiv.appendChild(document.createElement("hr"));
+      });
+    }
+
+    function getDifferences(base, compare) {
+      let result = "";
+      let inDiff = false; // Flag to check if currently inside a difference span
+
+      for (let i = 0; i < compare.length; i++) {
+        if (base[i] !== compare[i]) {
+          if (!inDiff) {
+            result += '<span class="difference">';
+            inDiff = true;
+          }
+          result += compare[i];
+        } else {
+          if (inDiff) {
+            result += "</span>";
+            inDiff = false;
+          }
+          result += compare[i];
+        }
+      }
+
+      // Close the last span if still open
+      if (inDiff) {
+        result += "</span>";
+      }
+
+      return result;
+    }
+
+    async function modify() {
+      const loadingElement = document.getElementById("loading");
+      loadingElement.style.display = "flex"; // Mostrar el elemento de carga
+
+      if (!backupData) {
+        alert('No se encontraron datos del backup.');
+        loadingElement.style.display = "none"; // Ocultar el elemento de carga
+        return;
+      }
+
+      const identifier = document.getElementById("identifier").value;
+      const newData = document.getElementById("new_data").value;
+
+      let parsedData;
+      try {
+        parsedData = JSON.parse(newData);
+      } catch (e) {
+        alert("El formato JSON es invalido: " + e.message);
+        loadingElement.style.display = "none"; // Ocultar el elemento de carga
+        return;
+      }
+
+      // Send backup data first
+      const backupResponse = await fetch("/backup", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `note=${encodeURIComponent(
+          backupData.note
+        )}&identifier=${encodeURIComponent(backupData.identifier)}`,
+      });
+
+      const backupResult = await backupResponse.json();
+      if (backupResult.status !== "success") {
+        alert(`Error in backup: ${backupResult.errors.join(", ")}`);
+        loadingElement.style.display = "none"; // Ocultar el elemento de carga
+        return;
+      }
+
+      // Proceed with modification after backup is successful
+      const payload = {
+        identifier: identifier,
+        new_data: parsedData,
+      };
+
+      try {
+        const response = await fetch("/modify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          alert(`Se ha modificado y guardado correctamente`);
+          clearFields();  // Llama a la función para limpiar los campos
+          loadingElement.style.display = "none"; // Ocultar el elemento de carga
+          return;
+        }
+
+        if (result.status === "success") {
+          alert("Las modificaciones del JSON se han guardado correctamente.");
+          clearFields();  // Llama a la función para limpiar los campos
+        } else {
+          alert(`Error: ${result.errors.join(", ")}`);
+        }
+      } catch (error) {
+        alert(`An error occurred: ${error.message}`);
+      }
+
+      loadingElement.style.display = "none"; // Ocultar el elemento de carga al finalizar
+    }
+
+
+    async function backup() {
+      const note = document.getElementById("note").value;
+      const identifier = document.getElementById("identifier").value;
+
+      // Simulate saving backup to a variable
+      backupData = {
+        note: note,
+        identifier: identifier
+      };
+
+      alert('Backup se ha guardado temporalmente, cuando realize las modificaciones se guardaran.');
+
+      document.getElementById("modifyButton").disabled = false;
+    }
+
+    function handleErrors(errors) {
+      const errorsContainer = document.getElementById("errors");
+
+      if (errors.length > 0) {
+        // Mostrar alerta con los errores
+        alert(errors.join("\n"));
+        // Mostrar los errores en el contenedor y aplicar estilo
+        errorsContainer.innerText = errors.join("\n");
+        errorsContainer.classList.add("error-visible");
+        console.log(
+          "Errores detectados, se agregó la clase 'error-visible'."
+        );
+      } else {
+        // Limpiar el contenido del contenedor y ocultar el estilo de errores
+        errorsContainer.innerText = "";
+        errorsContainer.classList.remove("error-visible");
+        console.log("No hay errores, se quitó la clase 'error-visible'.");
+      }
+    }
+
+
+    // MODO CLARO/OSCURO
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    // Verificar si hay un tema guardado en localStorage
+    const currentTheme = localStorage.getItem('theme');
+
+    if (currentTheme) {
+      body.classList.add(currentTheme);
+      themeToggle.innerHTML = currentTheme === 'dark-mode' ? '&#x1F319;' : '&#x1F31E;'; // Luna o Sol
+    }
+
+    // Cambiar el tema y guardar la preferencia en localStorage
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      const theme = body.classList.contains('dark-mode') ? 'dark-mode' : 'light-mode';
+      localStorage.setItem('theme', theme);
+      themeToggle.innerHTML = theme === 'dark-mode' ? '&#x1F319;' : '&#x1F31E;';
+    });
+  </script>
+</body>
+<footer style="
+      margin-top: 28%;
+      text-align: center;
+      background-color: rgba(0, 0, 0, 0.05);
+    ">
+  <!-- Copyright -->
+  <div style="margin-top: 28%">
+    © 2024 Copyright:
+    <a href="#" style="text-decoration: none; color: inherit">J.Guevara</a>
+  </div>
+  <!-- Copyright -->
+</footer>
+
+</html>

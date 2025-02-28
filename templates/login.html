@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iniciar sesión</title>
+    <link rel="icon" href="../static/img/icono-Sistem.ico" />
+    <style>
+      /* Estilos generales */
+      body {
+        font-family: Arial, sans-serif; /* Fuente general */
+        background-image: url('/static/img/fondo.jpg'); /* Fondo con imagen de JSON */
+        background-size: cover; /* Ajustar imagen al tamaño de la pantalla */
+        background-position: center; /* Centrar la imagen de fondo */
+        display: flex;
+        flex-direction: column; /* Coloca el contenedor y el footer en columna */
+        min-height: 100vh; /* Altura completa de la ventana */
+        margin: 0; /* Sin márgenes */
+        color: #333;
+      }
+
+      /* Título JsonManager en la esquina superior derecha */
+      .json-manager-title {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 24px;
+        font-weight: bold;
+        color: #fff; /* Color blanco para contrastar */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para que resalte el texto */
+      }
+
+      /* Estilos del contenedor del formulario */
+      .login-container {
+        max-width: 400px; /* Ancho máximo del contenedor */
+        width: 100%; /* Ancho en pantalla pequeña */
+        margin: auto; /* Centrar el contenedor vertical y horizontalmente */
+        padding: 70px 40px; /* Espaciado interno (ajustado) */
+        border: 1px solid #ccc; /* Borde del contenedor */
+        border-radius: 8px; /* Bordes redondeados */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Sombra más intensa */
+        background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+        margin-top: 100px;
+        background: rgba(255, 255, 255, 0.1); /* Fondo semitransparente */
+        backdrop-filter: blur(10px); /* Efecto de desenfoque */
+        border: 1px solid rgba(255, 255, 255, 0.3); /* Borde blanco translúcido */
+        border-radius: 10px;      
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Sombra suave */
+      }
+
+      /* Footer siempre en la parte inferior */
+      footer {
+        text-align: center;
+        background-color: rgba(0, 0, 0, 0.05);
+        padding: 10px;
+        position: relative; /* Cambiar a posición relativa */
+        bottom: 0; /* Asegura que esté al final */
+        width: 100%;
+        margin-top: 300px;
+      }
+
+      footer a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      /* Estilos para el logo */
+      .login-logo {
+        position: absolute; /* Posición absoluta */
+        top: 30px; /* Ajusta la posición superior */
+        left: 20px; /* Ajusta la posición izquierda */
+        width: 250px; /* Ancho de la imagen */
+        height: auto; /* Mantener proporción de la imagen */
+        background-color: transparent; /* Fondo transparente */
+        mix-blend-mode: multiply; /* Mezcla de colores para integrarlo mejor con el fondo */
+        margin-left: 50px;
+      }
+      
+      
+
+      /* Estilos del encabezado */
+      h2 {
+        text-align: center; /* Centrar el texto del encabezado */
+        margin-bottom: 50px; /* Espacio debajo del título */
+      }
+
+      /* Estilos de los campos del formulario */
+      .form-group {
+        margin-bottom: 15px; /* Espaciado entre los campos del formulario */
+      }
+
+      label {
+        display: block; /* Etiquetas como bloque */
+        margin-bottom: 5px; /* Espacio debajo de las etiquetas */
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        width: 100%; /* Ancho completo */
+        padding: 10px; /* Espaciado interno */
+        border: 1px solid #ccc; /* Borde del campo */
+        border-radius: 4px; /* Bordes redondeados */
+        box-sizing: border-box; /* Incluir padding y borde en el ancho total */
+      }
+
+      /* Estilos del botón */
+      button {
+        width: 100%; /* Botón ocupa todo el ancho */
+        padding: 10px; /* Espaciado interno */
+        background-color: #007bff; /* Color de fondo del botón */
+        color: white; /* Color del texto del botón */
+        border: none; /* Sin borde */
+        border-radius: 4px; /* Bordes redondeados */
+        cursor: pointer; /* Cursor en forma de mano */
+        font-size: 16px; /* Tamaño de fuente */
+      }
+
+      button:hover {
+        background-color: #0056b3; /* Color al pasar el mouse */
+      }
+
+      /* Estilos de mensajes de alerta */
+      .alert {
+        padding: 10px; /* Espaciado interno */
+        margin-top: 10px; /* Espacio superior */
+        border-radius: 4px; /* Bordes redondeados */
+        display: none; /* Inicialmente oculto */
+      }
+
+      .alert.success {
+        background-color: #d4edda; /* Color de fondo verde */
+        color: #155724; /* Color del texto */
+      }
+
+      .alert.danger {
+        background-color: #f8d7da; /* Color de fondo rojo */
+        color: #721c24; /* Color del texto */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="json-manager-title">JSON-Manager</div> <!-- Título en la esquina superior derecha -->
+    <img src="/static/img/logo.png" alt="Logo" class="login-logo" />
+    <br/>
+    <br/>
+    <br/>
+    <div class="login-container">
+      
+      <h2>Iniciar sesión</h2>
+      <form method="POST" action="{{ url_for('login') }}">
+        <div class="form-group">
+          <label for="username">Usuario:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            name="username"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Contraseña:</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            required
+          />
+        </div>
+        <button type="submit">Ingresar</button>
+      </form>
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <div class="mt-3">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}" style="display: block">
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+    </div>
+    <script>
+      // Script para ocultar mensajes de alerta después de 2 segundos
+      const alerts = document.querySelectorAll(".alert");
+      alerts.forEach((alert) => {
+        setTimeout(() => {
+          alert.style.display = "none"; // Ocultar el mensaje
+        }, 2000); // Esperar 2000 ms
+      });
+    </script>
+  </body>
+  <footer
+    style="text-align: center; background-color: rgba(0, 0, 0, 0.05)"
+  >
+    <div style="margin-top: 1%">
+      © 2024 Copyright:
+      <a href="#" style="text-decoration: none; color: inherit">J.Guevara</a>
+    </div>
+  </footer>
+</html>

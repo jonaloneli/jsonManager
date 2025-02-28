@@ -1,0 +1,74 @@
+1- Flask: Es un framework web ligero para Python.
+	pip install Flask
+2- Paramiko: Es una implementación de Python del protocolo SSH.
+	pip install paramiko
+3- Pandas: Es una biblioteca de análisis de datos.
+	pip install pandas
+4- XlsxWriter: Es una biblioteca de Python para crear archivos de Excel.
+	pip install XlsxWriter
+5- Librería para generar un ejecutable:
+	pip install pyinstaller
+6- Obtener informacion sobre los procesos en ejecucion:
+	pip install psutil
+
+python app.py runserver
+
+////////////////Generar Ejecutable///////////////////////
+
+1- Crear el archivo "NombreAplicacion.spec" (****Opcional*****, crear archivo .spec genérico : pyinstaller mi_aplicacion.spec)
+
+2- Crear el ejecutable: Ejecuta el siguiente comando en tu terminal:
+	pyinstaller jsonManager.spec
+
+Archivo jsonManager.spec:
+
+
+# jsonManager.spec
+
+# -*- mode: python ; coding: utf-8 -*-
+
+block_cipher = None
+
+a = Analysis(
+    ['app.py'],
+    pathex=['.'],
+    binaries=[],
+    datas=[
+        ('templates/*.html', 'templates'),
+        ('static/img/*', 'static/img')
+    ],
+    hiddenimports=[],
+    hookspath=[],
+    runtime_hooks=[],
+    excludes=[],
+    win_no_prefer_redirects=False,
+    win_private_assemblies=False,
+    cipher=block_cipher,
+)
+pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
+
+exe = EXE(
+    pyz,
+    a.scripts,
+    [],
+    exclude_binaries=True,
+    name='jsonManager',
+    debug=False,
+    bootloader_ignore_signals=False,
+    strip=False,
+    upx=True,
+    upx_exclude=[],
+    runtime_tmpdir=None,
+    console=True
+)
+
+coll = COLLECT(
+    exe,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
+    strip=False,
+    upx=True,
+    upx_exclude=[],
+    name='jsonManager'
+)

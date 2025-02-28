@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Cámaras</title>
+    <link rel="icon" href="../static/img/icono-Sistem.ico" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #e6e6e6;
+      }
+
+      .container {
+        max-width: 1700px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      select,
+      button {
+        padding: 10px;
+      }
+
+      button {
+        background-color: #44484e;
+        border: none;
+        color: rgb(237, 236, 236);
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius: 8px;
+      }
+
+      button:hover {
+        background-color: #a9b1a9;
+      }
+
+      .result {
+        white-space: pre-wrap;
+      }
+
+      /* Estilos para la barra de navegación */
+      .navbar {
+        background-color: #343a40;
+        /* Color oscuro */
+        padding: 8px 20px;
+        /* Ajuste del relleno */
+        display: flex;
+        justify-content: space-between;
+        /* Alinear los elementos a los extremos */
+      }
+
+      /* Estilos para la barra de navegación */
+      .navbar {
+        display: flex;
+        align-items: center;
+        background-color: #333;
+        padding: 10px;
+      }
+
+      /* Estilos para la barra de navegación */
+      .navbar {
+        display: flex;
+        align-items: center;
+        background-color: #333;
+        padding: 10px;
+      }
+
+      /* Estilos para el logo */
+      .navbar-logo {
+        height: 40px;
+        /* Ajusta el tamaño del logo según sea necesario */
+        margin-right: 20px;
+        /* Espacio entre el logo y los enlaces */
+      }
+
+      /* Estilos para los enlaces */
+      .navbar-links {
+        display: flex;
+        flex-grow: 1;
+        /* Ocupa el espacio restante */
+        justify-content: flex-end;
+        /* Alinea los enlaces a la derecha */
+      }
+
+      /* Estilos para los elementos de la barra de navegación */
+      .navbar a {
+        color: #fff;
+        text-decoration: none;
+        padding: 10px 20px;
+        margin: 0 5px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+      }
+
+      /* Cambio de color de fondo al pasar el ratón sobre los elementos de la barra de navegación */
+      .navbar a:hover {
+        background-color: #6c757d;
+      }
+
+      /* Hacer que los enlaces sean responsivos */
+      @media (max-width: 768px) {
+        .navbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .navbar-logo {
+          margin-bottom: 10px;
+        }
+
+        .navbar-links {
+          justify-content: flex-start;
+        }
+
+        .navbar a {
+          padding: 10px;
+          margin: 5px 0;
+        }
+      }
+
+      /* Estilo para la fila */
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        /* Permitir que las columnas se envuelvan a la siguiente línea */
+      }
+
+      /* Estilo para la columna */
+      .column {
+        flex: 1 1 20%;
+        /* Que cada columna tenga el 20% del ancho total */
+        max-width: 5%;
+        /* Establecer un ancho máximo para que cada columna no sea más ancha que el 5% */
+        padding: 0 15px;
+        /* Espacio entre las columnas */
+      }
+
+      /* Estilo para los elementos dentro de la columna */
+      .column p {
+        margin: 5px 0;
+        /* Espacio entre cada elemento */
+      }
+
+      .column {
+        float: left;
+        width: 20%;
+        /* Cambia esto según sea necesario */
+      }
+
+      /* Estilos para el select */
+      select {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        appearance: none;
+        /* Elimina los estilos nativos del sistema operativo */
+        -webkit-appearance: none;
+        /* Para navegadores basados en WebKit (Chrome, Safari, etc.) */
+        -moz-appearance: none;
+        /* Para Firefox */
+        background-color: #f2f2f2;
+        color: #555;
+        width: 20%;
+        box-sizing: border-box;
+      }
+
+      select:focus {
+        outline: none;
+        border-color: #4caf50;
+      }
+
+      /*Estilos para el listado de camaras*/
+      .form-group {
+        margin-bottom: 20px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-group label {
+        font-weight: bold;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      .result {
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: #fff;
+      }
+
+      /****************************/
+      .button-group {
+        margin-bottom: 15px;
+      }
+
+      .button-group button {
+        margin-right: 5px;
+        margin-bottom: 5px;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .button-group button .ip {
+        font-size: 0.8em;
+      }
+
+      .button-group button.selected {
+        background-color: green;
+        color: white;
+      }
+
+      .row {
+        display: flex;
+      }
+
+      .column {
+        flex: 1;
+        margin: 5px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+      }
+
+      .folder-button {
+        background-color: #eede83f5;
+        border: none;
+        padding: 10px;
+        margin: 5px;
+        cursor: pointer;
+        border-radius: 5px;
+        color: rgb(22, 21, 21);
+        font-weight: bold;
+      }
+
+      .folder-button img {
+        width: 20px;
+        /* Ajusta el ancho de la imagen */
+        height: auto;
+        /* La altura se ajustará automáticamente para mantener la relación de aspecto */
+        margin-right: 5px;
+        /* Añade espacio a la derecha del ícono */
+      }
+
+      .button-group1 button.selected {
+        background-color: #ffa500;
+      }
+
+      /************POP UP***********/
+
+      .popup {
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 128, 0, 0.9);
+        /* Verde */
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        z-index: 1000;
+        /* Para que esté por encima de todo */
+        display: none;
+      }
+
+      .popup.visible {
+        display: block;
+      }
+
+      .red {
+        background-color: red;
+        color: white;
+        /* Para que el texto sea legible sobre el fondo rojo */
+      }
+
+      /*//////CAMARAS///////*/
+      .camera-box {
+        border: 1px solid #ccc;
+        display: inline-block;
+        margin: 5px;
+        padding: 5px;
+        text-align: center;
+        width: auto;
+        /* Ajustar automáticamente según el contenido */
+        max-width: 80px;
+        /* Establecer un ancho mínimo */
+        max-height: 30px;
+        cursor: pointer;
+        /* Esto hace que el recuadro parezca clicable */
+      }
+
+      .camera-box span {
+        margin-top: -28px;
+        display: block;
+        font-size: 15px;
+        /* Ajusta este valor según sea necesario */
+      }
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        /* Permitir que las cajas se envuelvan */
+      }
+
+      /*CARGANDO...*/
+      .loading {
+        font-size: 18px;
+        color: rgb(3, 3, 19);
+        text-align: center;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+      }
+
+      .loading::after {
+        content: "";
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background: blue;
+        border-radius: 50%;
+        margin-left: 10px;
+        animation: loading 1s linear infinite;
+      }
+
+      @keyframes loading {
+        0% {
+          transform: translateX(0);
+        }
+
+        50% {
+          transform: translateX(50px);
+          background-color: white;
+        }
+
+        100% {
+          transform: translateX(0);
+        }
+      }
+
+      /* MODO OSCURO/CLARO */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #e6e6e6;
+        color: #000;
+        transition: background-color 0.5s, color 0.5s;
+      }
+
+      /* Modo oscuro */
+      body.dark-mode {
+        background-color: #1e1e1e;
+        color: #d1d0d0;
+      }
+
+      .container {
+        max-width: 1700px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.5s;
+      }
+
+      /* Fondo oscuro para form-group en modo oscuro */
+      body.dark-mode .form-group {
+        background-color: #333;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      select,
+      button {
+        padding: 10px;
+      }
+
+      button {
+        background-color: #44484e;
+        border: none;
+        color: rgb(237, 236, 236);
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius: 8px;
+      }
+
+      button:hover {
+        background-color: #a9b1a9;
+      }
+
+      .result {
+        white-space: pre-wrap;
+        background-color: #fff;
+        color: #000;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        transition: background-color 0.5s, color 0.5s;
+      }
+
+      body.dark-mode .result {
+        background-color: #444;
+        color: #fff;
+      }
+
+      /* Estilos para la barra de navegación */
+      .navbar {
+        background-color: #343a40;
+        padding: 8px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .navbar-logo {
+        height: 40px;
+        margin-right: 20px;
+      }
+
+      .navbar-links {
+        display: flex;
+        flex-grow: 1;
+        justify-content: flex-end;
+      }
+
+      .navbar a {
+        color: #fff;
+        text-decoration: none;
+        padding: 10px 20px;
+        margin: 0 5px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+      }
+
+      .navbar a:hover {
+        background-color: #6c757d;
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .navbar-logo {
+          margin-bottom: 10px;
+        }
+
+        .navbar-links {
+          justify-content: flex-start;
+        }
+
+        .navbar a {
+          padding: 10px;
+          margin: 5px 0;
+        }
+      }
+
+      /* Estilo para la fila */
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      /* Estilo para la columna */
+      .column {
+        flex: 1 1 20%;
+        max-width: 5%;
+        padding: 0 15px;
+      }
+
+      .column p {
+        margin: 5px 0;
+      }
+
+      .camera-box {
+        border: 1px solid #ccc;
+        display: inline-block;
+        margin: 5px;
+        padding: 5px;
+        text-align: center;
+        width: auto;
+        max-width: 80px;
+        max-height: 30px;
+        cursor: pointer;
+      }
+
+      .camera-box span {
+        margin-top: -28px;
+        display: block;
+        font-size: 15px;
+      }
+
+      /* Botón de cambio de tema */
+      .theme-toggle {
+        font-size: 24px;
+        cursor: pointer;
+      }
+
+      /* Cargando... */
+      .loading {
+        font-size: 18px;
+        color: rgb(3, 3, 19);
+        text-align: center;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        transition: color 0.5s;
+      }
+
+      .loading::after {
+        content: "";
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background: blue;
+        border-radius: 50%;
+        margin-left: 10px;
+        animation: loading 1s linear infinite;
+        transition: background-color 0.5s;
+      }
+
+      /* Estilos para el modo oscuro */
+      body.dark-mode .loading {
+        color: #fff;
+        /* Color blanco para el texto */
+      }
+
+      body.dark-mode .loading::after {
+        background-color: yellow;
+        /* Color amarillo para los puntos */
+      }
+
+      @keyframes loading {
+        0% {
+          transform: translateX(0);
+        }
+
+        50% {
+          transform: translateX(50px);
+          background-color: white;
+        }
+
+        100% {
+          transform: translateX(0);
+        }
+      }
+
+
+      .flashes {
+        list-style-type: none; /* Eliminar viñetas */
+        margin: 0; /* Sin márgenes */
+        padding: 0; /* Sin padding */
+        display: flex; /* Hacer que los mensajes estén en línea */
+        align-items: center; /* Alinear verticalmente */
+    }
+  
+    .flashes li {
+        font-size: 15px; /* Tamaño de fuente más pequeño */
+        padding: 5px 10px; /* Espaciado alrededor del texto */
+        margin-left: 10px; /* Espacio entre los mensajes y otros elementos */
+        border-radius: 4px; /* Bordes redondeados */
+    }
+  
+    .flashes .alert-success {
+        background-color: #d4edda; /* Fondo verde claro para éxito */
+        color: #155724; /* Color de texto verde oscuro */
+    }
+  
+    .flashes .alert-danger {
+        background-color: #f8d7da; /* Fondo rojo claro para error */
+        color: #721c24; /* Color de texto rojo oscuro */
+    }
+    </style>
+  </head>
+
+  <body>
+    <div class="navbar">
+      <div></div>
+      <img src="/static/img/logo.png" alt="Logo" class="navbar-logo" />
+      <div class="navbar-links">
+        <a href="/">JSON Manager</a>
+        <a href="/cameras">Lista de Cámaras</a>
+        <span class="theme-toggle" id="theme-toggle">&#x1F31E;</span>
+        <!-- Icono de Sol -->
+
+        <!-- Mostrar el botón de cerrar sesión si el usuario está autenticado -->
+        {% if 'user' in session %}
+        <a href="{{ url_for('logout') }}" class="logout-btn">Cerrar sesión</a>
+        {% endif %}
+
+        <!-- Mostrar mensajes flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+          <li class="alert alert-{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %} {% endwith %}
+      </div>
+    </div>
+
+    <div class="container">
+      <h1>Listado de cámaras</h1>
+      <div class="form-group">
+        <label>Selecciona servidor disponible:</label>
+        <div id="mv-buttons" class="button-group">
+          {% for vm in vms %}
+          <button type="button" onclick="selectMV('{{ vm.ip }}', this)">
+            <span class="ip">{{ vm.ip }}</span> REG{{ loop.index }}
+          </button>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Selecciona la carpeta:</label>
+        <div id="folder-buttons" class="button-group1"></div>
+      </div>
+
+      <button onclick="fetchCameras()">Mostrar Cámaras</button>
+      <button onclick="downloadExcel()">Descargar Excel</button>
+      <br />
+      <br />
+      <div class="form-group">
+        <label id="camera-list-label">Listado de las cámaras de:</label>
+        <div id="result" class="result"></div>
+      </div>
+      <div id="loading" class="loading" style="display: none">Cargando...</div>
+
+      <!-- <div>
+        <p>videos VLC</p>
+      <label for="s2id_autogen2" class="select2-offscreen"></label>
+        <embed type="application/x-vlc-plugin" name="VLC" autoplay="yes" loop="no" volume="100" width="640" height="480" src="rtsp://sct:sct@10.131.3.3:554/axis-media/media.amp?videocodec=h264" controls>
+        </div>'; -->
+    </div>
+    <!-- <div id="download-success-popup" class="popup hidden">
+    Se ha descargado con éxito
+  </div> -->
+    <div id="error-popup" class="popup hidden">
+      <div class="error-message"></div>
+    </div>
+
+    <script>
+
+              // Espera a que el documento esté completamente cargado
+              document.addEventListener("DOMContentLoaded", function() {
+                // Selecciona todos los mensajes flash
+                const flashes = document.querySelectorAll('.flashes li');
+
+                // Itera sobre cada mensaje
+                flashes.forEach(function(flash) {
+                    // Establece un temporizador para eliminar el mensaje después de 2 segundos
+                    setTimeout(function() {
+                        flash.style.opacity = '0'; // Desvanece el mensaje
+                        setTimeout(function() {
+                            flash.remove(); // Elimina el mensaje del DOM después de 0.5 segundos
+                        }, 500); // 0.5 segundos de duración del efecto de desvanecimiento
+                    }, 2000); // 2 segundos de espera antes de empezar a desvanecer
+                });
+            });
+      const vms = {{ vms | tojson }};
+      let selectedMV = '';
+      let selectedFolder = '';
+      // Función para mostrar un popup con el mensaje de error
+      function showErrorPopup(message) {
+        const errorPopup = document.getElementById('error-popup');
+        const errorMessage = errorPopup.querySelector('.error-message');
+        errorMessage.textContent = message;
+        errorPopup.classList.add('visible', 'red');
+
+        // Ocultar el popup después de 5 segundos
+        setTimeout(() => {
+          errorPopup.classList.remove('visible', 'red');
+        }, 5000);
+      }
+
+
+
+      function selectMV(ip, button) {
+        selectedMV = ip;
+        const folderButtons = document.getElementById('folder-buttons');
+        folderButtons.innerHTML = '';
+
+        // Remover clase 'selected' de todos los botones de MV
+        document.querySelectorAll('#mv-buttons button').forEach(btn => btn.classList.remove('selected'));
+        // Añadir clase 'selected' al botón clicado
+        button.classList.add('selected');
+
+        const vm = vms.find(vm => vm.ip === ip);
+        if (vm && vm.folders) {
+          vm.folders.forEach(folder => {
+            const folderButton = document.createElement('button');
+            folderButton.type = 'button';
+            folderButton.classList.add('folder-button');
+
+            // Crear elemento de imagen para la carpeta
+            const folderImg = document.createElement('img');
+            folderImg.src = '../static/img/carpeta.png';
+            folderImg.alt = 'Carpeta';
+
+            // Crear texto para el botón
+            const buttonText = document.createTextNode(folder);
+
+            // Agregar imagen y texto al botón
+            folderButton.appendChild(folderImg);
+            folderButton.appendChild(buttonText);
+
+            // Asignar evento de clic
+            folderButton.onclick = () => selectFolder(folder, folderButton);
+
+            folderButtons.appendChild(folderButton);
+          });
+        }
+      }
+
+      function selectFolder(folder, button) {
+        selectedFolder = folder;
+        // Remover clase 'selected' de todos los botones de carpeta
+        document.querySelectorAll('#folder-buttons button').forEach(btn => btn.classList.remove('selected'));
+        // Añadir clase 'selected' al botón clicado
+        button.classList.add('selected');
+      }
+
+      async function fetchCameras() {
+        const loadingElement = document.getElementById("loading");
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = '';
+
+        loadingElement.style.display = "flex"; // Mostrar el elemento de carga
+
+        if (selectedMV && selectedFolder) {
+          try {
+            const response = await fetch('/get_cameras', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: `ip=${encodeURIComponent(selectedMV)}&folder=${encodeURIComponent(selectedFolder)}`
+            });
+
+            const camerasJson = await response.json();
+            // Mostrar un popup de error si hubo errores al obtener los archivos JSON
+            if (response.status !== 200) {
+              showErrorPopup(camerasJson);
+              loadingElement.style.display = "none"; // Ocultar el elemento de carga
+              return;
+            }
+
+            const cameras = camerasJson.cameras;
+            const numColumns = 15;
+            const numRows = Math.ceil(cameras.length / numColumns);
+
+            let html = '';
+            for (let i = 0; i < numRows; i++) {
+              html += '<div class="row">';
+              for (let j = 0; j < numColumns; j++) {
+                const index = i * numColumns + j;
+                if (index < cameras.length) {
+                  const cameraName = cameras[index].name.replace('camera.', 'TV ');
+                  html += `
+                  <div class="camera-box" onclick="openVLC('${cameras[index].mrl}')">
+                    <span>${cameraName}</span>
+                  </div>`;
+                }
+              }
+              html += '</div>';
+            }
+
+            resultDiv.innerHTML = html;
+
+            const cameraListLabel = document.getElementById('camera-list-label');
+            cameraListLabel.textContent = `Listado de Cámaras de ${selectedFolder}:`;
+          } catch (error) {
+            alert(`A ocurrido un error: ${error.message}`);
+          } finally {
+            loadingElement.style.display = "none"; // Ocultar el elemento de carga
+          }
+        } else {
+          alert('Por favor, selecciona un servidor y una carpeta.');
+          loadingElement.style.display = "none"; // Ocultar el elemento de carga
+        }
+      }
+
+
+      function openVLC(mrl) {
+        const vlcPath = "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe";
+        const command = `"${vlcPath}" "${mrl}"`;
+        fetch('/open_vlc', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ command })
+        });
+      }
+
+      function downloadExcel() {
+        if (selectedMV && selectedFolder) {
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = '/download_cameras';
+
+          const ipInput = document.createElement('input');
+          ipInput.type = 'hidden';
+          ipInput.name = 'ip';
+          ipInput.value = selectedMV;
+
+          const folderInput = document.createElement('input');
+          folderInput.type = 'hidden';
+          folderInput.name = 'folder';
+          folderInput.value = selectedFolder;
+
+          form.appendChild(ipInput);
+          form.appendChild(folderInput);
+
+          // Añade un evento onload para controlar la descarga exitosa
+          form.onload = function () {
+            // Muestra el pop-up de éxito
+            const downloadSuccessPopup = document.getElementById('download-success-popup');
+            downloadSuccessPopup.classList.add('visible');
+
+            // Oculta el pop-up después de 3 segundos
+            setTimeout(() => {
+              downloadSuccessPopup.classList.remove('visible');
+            }, 3000);
+          };
+
+          document.body.appendChild(form);
+          form.submit();
+          document.body.removeChild(form);
+        } else {
+          alert('Por favor, selecciona un servidor y una carpeta.');
+        }
+      }
+
+
+      // MODO CLARO/OSCURO
+      const themeToggle = document.getElementById('theme-toggle');
+      const body = document.body;
+
+      // Verificar si hay un tema guardado en localStorage
+      const currentTheme = localStorage.getItem('theme');
+
+      if (currentTheme) {
+        body.classList.add(currentTheme);
+        themeToggle.innerHTML = currentTheme === 'dark-mode' ? '&#x1F319;' : '&#x1F31E;'; // Luna o Sol
+      }
+
+      // Cambiar el tema y guardar la preferencia en localStorage
+      themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        const theme = body.classList.contains('dark-mode') ? 'dark-mode' : 'light-mode';
+        localStorage.setItem('theme', theme);
+        themeToggle.innerHTML = theme === 'dark-mode' ? '&#x1F319;' : '&#x1F31E;';
+      });
+    </script>
+  </body>
+  <footer
+    style="
+      margin-top: 28%;
+      text-align: center;
+      background-color: rgba(0, 0, 0, 0.05);
+    "
+  >
+    <div style="margin-top: 28%">
+      © 2024 Copyright:
+      <a href="#" style="text-decoration: none; color: inherit">J.Guevara</a>
+    </div>
+  </footer>
+</html>
